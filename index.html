@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html, #allmap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=LF62GoyEvpDGH4StEMOy6dNtmgsPQUi3"></script>
+    <title>地图展示</title>
+</head>
+<body>
+    <div id="allmap"></div>
+</body>
+</html>
+ 
+<script type="text/javascript">
+    //地图显示中心、缩放大小设置
+    var map = new BMap.Map("allmap");    // 创建Map实例
+    map.centerAndZoom("青岛市", 15);  // 初始化地图,设置中心点坐标和地图级别
+    //添加地图类型控件
+    map.addControl(new BMap.MapTypeControl({
+        mapTypes: [
+            BMAP_NORMAL_MAP,
+            BMAP_HYBRID_MAP
+        ]
+    }));
+    map.setCurrentCity("青岛市");          // 设置地图显示的城市 此项是必须设置的
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+ 
+    //添加标记
+    var point = new BMap.Point(120.389472, 36.072362);//默认  可以通过Icon类来指定自定义图标
+    var marker = new BMap.Marker(point);//创建一个图像标注实例
+    var label = new BMap.Label("<p>青岛市政府</p><p>222</p>", { offset: new BMap.Size(20, -10) });//标注标签  
+    marker.setLabel(label)//设置标注说明  就是把lable信息赋给marker
+    marker.enableDragging();//标注可以拖动的
+    marker.addEventListener("dragend", function (e) {
+        alert(e.point.lng + ", " + e.point.lat);//打印拖动结束坐标  
+    });
+    map.addOverlay(marker);//将，marker添加到地图上
+ 
+    //添加标记及窗口信息
+    var point = new BMap.Point(120.387244, 36.064835);
+    var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25));//不设置Icon，marker用默认图标。也可设置Icon自定义图标
+    var marker2 = new BMap.Marker(point, { icon: myIcon });
+    map.addOverlay(marker2);
+    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>详细信息</p>");  //弹出窗口 style='font-size:14px设置字体大小
+    marker2.addEventListener("click", function () {//点击标注，则弹出窗口
+        this.openInfoWindow(infoWindow);
+    });
+ 
+    //获取行政区域
+  //  function getBoundary3() {
+  //  var bdary = new BMap.Boundary(); //获取行政区域
+  //  bdary.get("青岛市", function (rs) { //rs为获取到的行政区域
+        //    map.clearOverlays();        //清除地图覆盖物
+  //  var count = rs.boundaries.length; //行政区域的点有多少个
+  //  if (count === 0) {
+    //    alert('未能获取当前输入行政区域');
+   //         return;
+    //}
+    //for (var i = 0; i < count; i++) {
+   //     var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "red" }); //建立多边形覆盖物
+     //   map.addOverlay(ply);  //添加覆盖物
+       // map.setViewport(ply.getPath());    //调整视野
+    //}
+    //});
+    //}
+    //getBoundary3();
+ 
+    //画线段
+   // var pointA = new BMap.Point(120.39358, 36.272679);//机场
+   // var pointB = new BMap.Point(120.386996, 36.071012);//五四广场
+   // var polyline = new BMap.Polyline([pointA, pointB], { strokeColor: "red", strokeWeight: 6})
+   // map.addOverlay(polyline)
+ 
+    //画面
+    var polygon=new BMap.Polygon([
+    new BMap.Point(120.39358, 36.272679),//机场
+    new BMap.Point(120.386996, 36.071012),//五四广场
+    new BMap.Point(120.406031, 36.086676),
+    ],{strokeColor: "red", strokeWeight: 6})
+     var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25));//不设置Icon，marker用默认图标。也可设置Icon自定义图标
+    var marker3 = new BMap.Marker(polygon, { icon: myIcon });
+    map.addOverlay(polygon);
+    map.addOverlay(marker3);
+    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>详细信息</p>");  //弹出窗口 style='font-size:14px设置字体大小
+    marker3.addEventListener("click", function () {//点击标注，则弹出窗口
+        this.openInfoWindow(infoWindow);
+    });
+    
+var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+map.addControl(ctrl_nav);
+        //向地图中添加缩略图控件
+var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1});
+map.addControl(ctrl_ove);
+        //向地图中添加比例尺控件
+var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+map.addControl(ctrl_sca);
+
+</script>
